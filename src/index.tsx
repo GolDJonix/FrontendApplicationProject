@@ -2,17 +2,6 @@ import { createRoot } from 'react-dom/client';
 
 import './index.css';
 import App from './App';
-import reportWebVitals from './reportWebVitals';
-
-
 
 const root = createRoot(document.getElementById('root') as HTMLElement);
 root.render(<App />);
-/* ReactDOM.render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>,
-  document.getElementById('root')
-); */
-
-reportWebVitals();
