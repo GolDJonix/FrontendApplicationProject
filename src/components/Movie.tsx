@@ -29,6 +29,7 @@ const MovieComponent: FC<{
         onClick={onButtonClick}
       >
         {`${movie.id} - ${movie.title} - ${movie.year} `}
+        {/* <button>edit</button> */}
       </div>
     )
 }

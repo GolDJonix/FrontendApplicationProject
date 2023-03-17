@@ -19,6 +19,7 @@ const Home = () => {
   };
   
   useEffect(() => {
+    setSelectedOption("No Filter")
     fetch(
       "http://localhost:3000",
       {
@@ -103,6 +104,7 @@ const Home = () => {
         {moviesToShow.map((movie) => (
           <Movie key={movie.id} movie={movie} setMovie={setMovie} />
         ))}
+        
         </div>
 
       </div>
