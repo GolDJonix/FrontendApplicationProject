@@ -1,4 +1,4 @@
-import MovieType from "./MovieType"
+import MovieType from './MovieType'
 
 export interface RespostaType {
     data: MovieType[]

@@ -1,8 +1,9 @@
-import './App.css';
+import React from 'react'
+import './App.css'
 import { FC } from 'react'
-import { BrowserRouter, Routes, Route } from "react-router-dom"
-import Home from "./pages/Home"
-import Details from './pages/Details';
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import Home from './pages/Home'
+import Details from './pages/Details'
 
 const App: FC = () => {
   return (
@@ -15,8 +16,7 @@ const App: FC = () => {
         </Route>
       </Routes>
     </BrowserRouter>
-  );
+  )
 }
 
-
-export default App;
+export default App

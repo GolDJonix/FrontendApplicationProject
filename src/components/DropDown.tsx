@@ -1,10 +1,10 @@
-import React from 'react';
-import { DropdownProps } from '../types/DropDownProps';
+import React from 'react'
+import { DropdownProps } from '../types/DropDownProps'
 
 const DropdownComponent: React.FC<DropdownProps> = ({ options, onSelect }) => {
-    const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
-    onSelect(event.target.value);
-  };
+  const handleSelect = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    onSelect(event.target.value)
+  }
 
   return (
     <select onChange={handleSelect}>
@@ -14,7 +14,7 @@ const DropdownComponent: React.FC<DropdownProps> = ({ options, onSelect }) => {
         </option>
       ))}
     </select>
-  );
-};
+  )
+}
 
-export default DropdownComponent;
+export default DropdownComponent

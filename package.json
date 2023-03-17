@@ -23,6 +23,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "lint": "npx eslint . --max-warnings=0",
+    "lint-fix": "npx eslint . --fix",
     "eject": "react-scripts eject"
   },
   "browserslist": {
