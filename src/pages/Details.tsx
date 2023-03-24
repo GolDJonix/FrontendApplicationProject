@@ -11,7 +11,8 @@ const Details = () => {
   const [movie, setMovie] = useState<MovieType>()
   
   const onButtonClickBack = () => {
-    navigate('/',{replace:true})
+    // navigate('/',{replace:true})
+    navigate(-1)
   }
 
   useEffect(() => {

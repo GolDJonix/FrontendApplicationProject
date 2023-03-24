@@ -23,3 +23,14 @@ export const Genres =
   'Musical',
   'Sport'
 ]
+export const SortedBy =
+[
+  'Not Sorted',
+  'title',
+  'year'
+]
+export const SortOrder =
+[
+  'Asc',
+  'Desc'
+]

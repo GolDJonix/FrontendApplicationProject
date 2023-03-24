@@ -9,5 +9,10 @@ export interface RespostaType {
 export interface RespostaSingleType {
     data: MovieType
     message: string
-    meta: any
+    meta: MetaType
+  }
+export interface MetaType {
+    page: number
+    size: number
+    total: number
   }
