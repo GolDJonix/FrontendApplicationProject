@@ -1,4 +1,4 @@
-export default interface Movie {
+export default interface MovieType {
     id: number
     title: string
     year: string
