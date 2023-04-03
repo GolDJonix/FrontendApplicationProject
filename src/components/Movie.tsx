@@ -1,38 +1,26 @@
-import React, { FC } from 'react'
-import MovieType from '../types/MovieType'
+import React,{ FC, useCallback} from 'react'
 import { useNavigate } from 'react-router-dom'
+import MovieType from '../types/MovieType'
 import { toggleFavoriteMovie } from '../API/Index'
 
-const MovieComponent: FC<{
-  movie: MovieType
-  isFav: boolean
-  refresh: () => void
-}> = ({movie,isFav,refresh}) => {
+const MovieComponent: FC <{movie: MovieType,isFav: boolean,refresh:() => void}> = ({ movie,isFav,refresh }) => {
   const navigate = useNavigate()
-
   const onButtonClick = () => navigate(`/movie/${movie.id}`)
-
-  const handleFav = async (idFav: number) => {
+  const onEditButtonClick = () => navigate(`/editMovie/${movie.id}`)
+  const setMovieAsFavorite = useCallback(async (idFav: number) => {
     await toggleFavoriteMovie(idFav)
     refresh()
-  }
+  },[]) 
 
-  return (  
-    <div
-      key={movie.id}
-      style={{
-        border:'solid 1px black',
-        margin:'5px 0px',
-        padding:'10px',
-        background: isFav === true ?  'green' : 'tomato'
-      }}
-      
-    >
-      {`${movie.id} - ${movie.title} - ${movie.year} `}
-      <button onClick={ () => handleFav(movie.id)}>{isFav === false ? 'AddFav' : 'RemFav'}</button>
+  return (
+    <div style={{ background: isFav === true ?  'green' : 'tomato', margin: '10px',padding: '5px'}}>
+      {`${movie.id} - ${movie.year} - ${movie.title} - ${movie.runtime}`}
+      <button onClick={() =>setMovieAsFavorite(movie.id)}> {isFav ? 'RemFav' : 'AddFav'}</button>
+      <button onClick={(onEditButtonClick)}>Edit Movie</button>
       <button onClick={onButtonClick}>Details</button>
     </div>
   )
+    
 }
 
 export default MovieComponent

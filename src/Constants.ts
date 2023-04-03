@@ -31,6 +31,7 @@ export const SortedBy =
 ]
 export const SortOrder =
 [
+  'No Order',
   'Asc',
   'Desc'
 ]
