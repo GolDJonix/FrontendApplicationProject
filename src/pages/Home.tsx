@@ -1,158 +1,123 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import Dropdown from '../components/DropDown'
-import Movie from '../components/Movie'
+import React,{useState,useCallback, useEffect} from 'react'
 import MovieType from '../types/MovieType'
-import {Genres, SortOrder, SortedBy} from '../Constants'
-import { getMovies,getFavoriteMovies } from '../API/Index'
 import { MetaType, RespostaType } from '../types/RespostaType'
-
+import { getFavoriteMovies, getMovies } from '../API/Index'
+import Movie from '../components/Movie'
+import DropDown from '../components/DropDown'
+import { Genres, SortOrder, SortedBy } from '../Constants'
 
 const Home = () => {
-  const [selectedOption, setSelectedOption] = useState('No Filter')
   const [filteredMovies,setFilteredMovies] = useState<MovieType[]>([])
-  const [favouriteMovies,setFavoriteMovies] = useState<MovieType[]>([])
   const [filteredGenres,setFilteredGenres] = useState<string[]>([])
-  const [inputStringQuery,setInputStringQuery] = useState<string>('')
-  const [pageQuery,setPageQuery] = useState<number>(0)
-  const [metaInfo,setMetaInfo] = useState<MetaType>({page: 0,size: 10,total: 146})
-  const [sortByOption, setSortByOption] = useState('Not Sorted')
-  const [sortOrderOption, setSortOrderOption] = useState(SortOrder[0])
+  const [favouriteMovies,setFavouriteMovies] = useState<MovieType[]>([])
+  const [stringInput,setStringInput] = useState<string>('')
+  const [selectedOption,setSelectedOption] = useState<string>('No Filter')
+  const [sortBy,setSortBy] = useState<string>('Not Sorted')
+  const [sortOrder,setSortOrder] = useState<string>('No Order')
+  const [metaInfo,setMetaInfo] = useState<MetaType>({page:0,size: 0,total: 0})
 
-  const getMoviesFromApi = async () => {
-    
-    console.log('GetMoviesFromApi: ',filteredGenres, inputStringQuery,pageQuery,sortByOption, sortOrderOption)
-    const result: RespostaType = await getMovies(filteredGenres, inputStringQuery, pageQuery, sortByOption, sortOrderOption)
-    console.log(result)
+  useEffect(() => {
+    getMoviesFromApi(0)
+    getFavoriteMoviesFromApi(0)
+  },[filteredGenres,sortBy,sortOrder])
+
+  const getMoviesFromApi = async (page:number) => {
+    const result : RespostaType = await getMovies(filteredGenres,stringInput,page,sortBy,sortOrder)
     if(result.meta){
       setMetaInfo(result.meta)
     }
-    if (result.data) setFilteredMovies(result.data)
-    else console.error('NO DATA RECEIVED')
+    if(result.data){
+      setFilteredMovies(result.data)
+    }
   }
 
-  const getFavMoviesFromApi = async () => {
-    /* console.log('query:',inputStringQuery) */
-    const result: RespostaType = await getFavoriteMovies()
-    /* console.log(result) */
-    
-    if (result.data) setFavoriteMovies(result.data)
-    else console.error('NO DATA RECEIVED')
+  const getFavoriteMoviesFromApi = useCallback( async (page:number) => {
+    console.log(`GetFavoriteMoviesFromApi: ${page}`)
+    const resultFav : RespostaType = await getFavoriteMovies()
+    if(resultFav.data){
+      setFavouriteMovies(resultFav.data)
+    }
+  },[])
+
+  const refreshFavData = () => {
+    getMoviesFromApi(metaInfo.page)
+    getFavoriteMoviesFromApi(metaInfo.page)
   }
 
-  useEffect(() => {
-    getMoviesFromApi()
-    getFavMoviesFromApi()
-  }, [filteredGenres, pageQuery, sortByOption, sortOrderOption])
-
-  /* const refreshData = useCallback(() => {
-    getMoviesFromApi()
-    getFavMoviesFromApi()
-  },[]) */
-
-  const refreshData = () => {
-    getMoviesFromApi()
-    getFavMoviesFromApi()
+  const removeSelectedGenre = (genre:string) => {
+    console.log(`Vou remover o ${genre}`)
+    const newArray = filteredGenres.filter((oldGenre) => genre !== oldGenre)
+    setFilteredGenres(newArray)
   }
 
-  const handleSelect = useCallback(async (newOption: string) => {
-    setSelectedOption(newOption)
-
-    if(newOption === 'No Filter'){
+  const handleSelect = useCallback(async (option:string) => {
+    setSelectedOption(option)
+    if(option === 'No Filter'){
       setFilteredGenres([])
     } else {
-      setFilteredGenres(old => {
-        if (!old.includes(newOption)) {
-          return [...old,newOption]
+      console.log(`Genre selecionado: ${option}`)
+      setFilteredGenres( old => {
+        console.log(filteredGenres.includes(option))
+        if(!old.includes(option)){
+          console.log(`Genero novo a acrescentar: ${option}`)
+          return [...old,option]
+        } else{
+          console.log(`Genero repetido ${option}`)
+          return old
         }
-        return old
       })
     }
-  }, [])
+  },[])
 
-  /*   const handleSortBy = (newOption: string) => {
-    setSortByOption(newOption)
-  } */
-  const handleSortBy = useCallback(async (newOption: string) => {
-    if(newOption === 'Not Sorted'){
-      setSortByOption('')
-    } else {
-      setSortByOption(newOption)
-    }
-    
-  },[])
-  const handleSortOrderOption = useCallback(async (newOption: string) => {
-    setSortOrderOption(newOption)
-  },[])
   const handleSubmit = () => {
-    console.log('Page: ', pageQuery)
-    getMoviesFromApi()
+    getMoviesFromApi(0)
   }
-  const handleChangeInput = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setInputStringQuery(event.target.value)
+
+  const handleSortedBySelect = useCallback(async (option: string) => {
+    if(option !== 'Not Sorted'){
+      setSortBy(option)
+    } else
+      setSortBy('')
+      
+  },[])
+  const handleSortOrderSelect = useCallback(async (option:string) => {
+    if(option !== 'No Order'){
+      setSortOrder(option)
+    } else 
+      setSortOrder('')
+  },[])
+
+  const handlePrevPage = () => {
+    getMoviesFromApi(metaInfo.page - 1)
   }
-  const handlePreviousPage = () => {
-    const newPage = pageQuery-1
-    setPageQuery(newPage)
-  }
+
   const handleNextPage = () => {
-    const newPage = pageQuery+1
-    setPageQuery(newPage)
+    getMoviesFromApi(metaInfo.page + 1)
   }
-  const removeSelectedGenre = (genre:string) => {
-    const newArray = filteredGenres.filter( (genreOld) => genre !== genreOld )
-    setFilteredGenres(newArray)
-    if (!newArray.length) setSelectedOption('No Filter')
-  }
-  const favMoviesIds = favouriteMovies.map(m => m.id)
-  return (
-    <div className="App" style={{ background: 'orange' }}>
-      <div>
-        {filteredGenres.map((genre) => (
-          <button
-            title='genre'
-            key={genre}
-            onClick={() => removeSelectedGenre(genre)}>
-            {genre}
-          </button>
-        ))}
+
+  const favouriteMoviesIds = favouriteMovies.map(m =>m.id)
+  return(
+    <div style={{backgroundColor: 'yellow',textAlign: 'center',padding:'5px'}}>
+      <h1>MovieList:</h1>
+      <div style={{backgroundColor: 'tomato'/* , textAlign:'center' */}}>
+        {filteredGenres.map(genre => <button key={genre} onClick={ () =>removeSelectedGenre(genre)}>{genre}</button>)}
       </div>
       <div>
-        <h1>Selected Option: {selectedOption}</h1>
-        <Dropdown options={Genres} onSelect={handleSelect} />
-       
-        <input type="text" value={inputStringQuery} placeholder='Pesquisa por String' onChange={handleChangeInput} />
-
-        <button onClick={handleSubmit}>Submit Filters</button>
-        
-        <Dropdown options={SortedBy} onSelect={handleSortBy} />
-
-        <Dropdown options={SortOrder} onSelect={handleSortOrderOption} />
-
+        <DropDown options={Genres} isVisible={true} onSelect={handleSelect}/>
+        <input type='text' value={stringInput} placeholder='String a pesquisar' onChange={(e) => setStringInput(e.target.value)}></input>
+        <button type='submit' onClick={handleSubmit}>Submit</button>
+        <DropDown options={SortedBy} isVisible={true} onSelect={handleSortedBySelect}/>
+        {sortBy !== ('Not Sorted' && '') ?<DropDown options={SortOrder} isVisible={ sortBy !== 'Not Sorted' ? true : false} onSelect={handleSortOrderSelect}/> :''}
       </div>
-      
-      { pageQuery !== 0 ? <button onClick={handlePreviousPage}>Previous</button> : undefined}
-
-      { pageQuery < Math.ceil(metaInfo.total / metaInfo.size)-1 ? <button onClick={handleNextPage}>Next</button> : undefined}
-      
-      
-      {/* <button onClick={handleNextPage}>Next</button> */}
-      <div style={{backgroundColor:'yellow',display:'flex'}}>
-        <div style={{width:'100%',backgroundColor:'lightcoral'}}>
-          {filteredMovies.map((movie) => {
-            const isFavAux = favMoviesIds.includes(movie.id)
-            return (
-              <Movie
-                key={movie.id}
-                refresh={refreshData}
-                isFav={isFavAux}
-                movie={movie}
-              />
-            )
-          })}
-        </div>
-      </div>
+      <div style={{padding: '20px',backgroundColor: 'orange'}}>
+        {filteredMovies.map((movie) => {
+          const isFavourite = favouriteMoviesIds.includes(movie.id) ? true : false
+          return <Movie key={movie.id} isFav={isFavourite} refresh={refreshFavData} movie={movie} />
+        })}
+      </div> 
+      {(metaInfo.page > 0)? <button onClick={handlePrevPage}>Prev</button> : ''} 
+      {metaInfo.page < Math.ceil(metaInfo.total/metaInfo.size) - 1 ? <button onClick={handleNextPage}>Next</button> : '' }
     </div>
   )
 }
-
 export default Home
