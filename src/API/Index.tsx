@@ -20,10 +20,9 @@ export const getMovies = (genres: string[],query: string,queryPage: number,sortB
   if(sortOrder.length && sortOrder !== 'No Order'){
     querySortOrderToSend = `sortOrder=${sortOrder}&`
   }
-  
-  console.log(`GETMOVIES: ?${genresToSend}${queryToSend}${querySortByToSend}${querySortOrderToSend}${queryPageToSend}`)
   return request('GET','',`?${genresToSend}${queryToSend}${querySortByToSend}${querySortOrderToSend}${queryPageToSend}`)
 }
+
 export const getMovieById = (idMovie:number) => {
   console.log(`getMovieById: movie/${idMovie}`)
   return request('GET',`${idMovie}`,'')
@@ -58,7 +57,6 @@ export const putMovieById = (idEditMovie: number,queryTitle: string,queryYear: s
   console.log('PUT',`edit/${idEditMovie}`,`${queryTitleToSend}${queryYearToSend}${queryRuntimeTosend}${queryGenresToSend}${queryDirectorToSend}${queryActorsToSend}${queryPlotToSend}${queryUrlToSend}`)
   return request('PUT',`edit/${idEditMovie}`,`?${queryTitleToSend}${queryYearToSend}${queryRuntimeTosend}${queryGenresToSend}${queryDirectorToSend}${queryActorsToSend}${queryPlotToSend}${queryUrlToSend}`)
 }
-
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const request = async (method: string, endPoint: string, queryParams: string): Promise<any> => {

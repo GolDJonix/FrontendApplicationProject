@@ -1,5 +1,4 @@
 import React,{ useEffect, useState } from 'react'
-import Movie from '../components/Movie'
 import { getMovieById } from '../API/Index'
 import { useNavigate, useParams } from 'react-router-dom'
 import { RespostaSingleType } from '../types/RespostaType'
@@ -18,7 +17,6 @@ const Details = () => {
       const result : RespostaSingleType = await getMovieById(id)
       setMovie(result.data)
     }
-        
   }
   const onButtonBackClick = () => {
     navigate(-1)

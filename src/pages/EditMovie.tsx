@@ -26,6 +26,7 @@ const EditMovie = () => {
   useEffect(() => {
     getMovieByIdApi()
   },[])
+
   const putEditMovieByIdApi = async() => {
     const id = params.id ? parseInt(params.id): undefined
     if(id !== undefined){
@@ -33,17 +34,13 @@ const EditMovie = () => {
       setMovie(result.data)
     }
   }
-  /* const handleGenresInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const inputGenre = event.target.value
-    setGenresToEdit([...genresToEdit, inputGenre])
-  } */
+ 
   const getMovieByIdApi = async () => {
     const id = params.id ? parseInt(params.id): undefined
     if(id !== undefined){
       const result : RespostaSingleType = await getMovieById(id)
       setMovie(result.data)
-    }
-        
+    }      
   }
 
   return (
@@ -69,23 +66,14 @@ const EditMovie = () => {
         </thead>
         <tbody>
           <tr>
-            {/* <h3>Id:</h3> */}
             <td>{`${movie?.id}`}</td>
-            {/* <h3>Title:</h3> */}
             <td>{`${movie?.title}`}</td>
-            {/* <h3>Year:</h3> */}
             <td>{`${movie?.year}`}</td>
-            {/*  <h3>Runtime:</h3> */}
             <td>{`${movie?.runtime}`}</td>
-            {/* <h3>Genres:</h3> */}
             <td>{`${movie?.genres}`}</td>
-            {/* <h3>Director:</h3> */}
             <td>{`${movie?.director}`}</td>
-            {/* <h3>Actors:</h3> */}
             <td>{`${movie?.actors}`}</td>
-            {/* <h3>Plot:</h3> */}
             <td>{`${movie?.plot}`}</td>
-            {/* <h3>PostedURL:</h3> */}
             <td>{`${movie?.posterUrl}`}</td>
           </tr>
         </tbody>
@@ -106,21 +94,13 @@ const EditMovie = () => {
         </thead>
         <tbody>
           <tr>
-            {/* <h3>Title:</h3> */}
             <td><input value={titleToEdit} type='string' onChange={(e) => setTitleToEdit(e.target.value)}></input></td>
-            {/* <h3>Year:</h3> */}
             <td><input value={yearToEdit} type='number' onChange={(e) => setYearToEdit(e.target.value)}></input></td>
-            {/*  <h3>Runtime:</h3> */}
             <td><input value={runtimeToEdit} onChange={(e) => setRuntimeToEdit(e.target.value)} type='number'></input></td>
-            {/* <h3>Genres:</h3> */}
             {/* <td><input value={genresToEdit} type='string' onChange={(e) => setGenresToEdit(e.target.value)}></input></td> */}
-            {/* <h3>Director:</h3> */}
             <td><input value={directorsToEdit} type='string' onChange={(e) => setDirectorToEdit(e.target.value)}></input></td>
-            {/* <h3>Actors:</h3> */}
             <td><input value={actorsToEdit} type='string' onChange={(e) => setActorsToEdit(e.target.value)}></input></td>
-            {/* <h3>Plot:</h3> */}
             <td><input value={plotToEdit} type='string' onChange={(e) => setPlotToEdit(e.target.value)}></input></td>
-            {/* <h3>PostedURL:</h3> */}
             <td><input value={urlToEdit} type='string' onChange={(e) => setUrlToEdit(e.target.value)}></input></td>
           </tr>
         </tbody>

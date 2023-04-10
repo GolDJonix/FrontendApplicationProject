@@ -7,6 +7,7 @@ const MovieComponent: FC <{movie: MovieType,isFav: boolean,refresh:() => void}> 
   const navigate = useNavigate()
   const onButtonClick = () => navigate(`/movie/${movie.id}`)
   const onEditButtonClick = () => navigate(`/editMovie/${movie.id}`)
+  const onEditButtonQLClick = () => navigate(`/editMovieQL/${movie.id}`)
   const setMovieAsFavorite = useCallback(async (idFav: number) => {
     await toggleFavoriteMovie(idFav)
     refresh()
@@ -17,10 +18,10 @@ const MovieComponent: FC <{movie: MovieType,isFav: boolean,refresh:() => void}> 
       {`${movie.id} - ${movie.year} - ${movie.title} - ${movie.runtime}`}
       <button onClick={() =>setMovieAsFavorite(movie.id)}> {isFav ? 'RemFav' : 'AddFav'}</button>
       <button onClick={(onEditButtonClick)}>Edit Movie</button>
+      <button onClick={(onEditButtonQLClick)}>EditQL Movie</button>
       <button onClick={onButtonClick}>Details</button>
     </div>
   )
-    
 }
 
 export default MovieComponent

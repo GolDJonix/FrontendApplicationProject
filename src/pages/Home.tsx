@@ -15,7 +15,6 @@ const Home = () => {
   const [sortBy,setSortBy] = useState<string>('Not Sorted')
   const [sortOrder,setSortOrder] = useState<string>('No Order')
   const [metaInfo,setMetaInfo] = useState<MetaType>({page:0,size: 0,total: 0})
-  const [pageQuery,setPageQuery] = useState<number>(0)
 
   useEffect(() => {
     getMoviesFromApi(0)
@@ -23,7 +22,6 @@ const Home = () => {
   },[filteredGenres,sortBy,sortOrder])
 
   const getMoviesFromApi = async (page:number) => {
-    /* console.log(`GetMoviesFromApi: ${filteredGenres},${stringInput},${page},${sortBy},${sortOrder}`) */
     const result : RespostaType = await getMovies(filteredGenres,stringInput,page,sortBy,sortOrder)
     if(result.meta){
       setMetaInfo(result.meta)
@@ -31,25 +29,27 @@ const Home = () => {
     if(result.data){
       setFilteredMovies(result.data)
     }
-    
   }
+
   const getFavoriteMoviesFromApi = useCallback( async (page:number) => {
     console.log(`GetFavoriteMoviesFromApi: ${page}`)
     const resultFav : RespostaType = await getFavoriteMovies()
     if(resultFav.data){
       setFavouriteMovies(resultFav.data)
     }
-    
   },[])
+
   const refreshFavData = () => {
     getMoviesFromApi(metaInfo.page)
     getFavoriteMoviesFromApi(metaInfo.page)
   }
+
   const removeSelectedGenre = (genre:string) => {
     console.log(`Vou remover o ${genre}`)
     const newArray = filteredGenres.filter((oldGenre) => genre !== oldGenre)
     setFilteredGenres(newArray)
   }
+
   const handleSelect = useCallback(async (option:string) => {
     setSelectedOption(option)
     if(option === 'No Filter'){
@@ -68,9 +68,11 @@ const Home = () => {
       })
     }
   },[])
+
   const handleSubmit = () => {
     getMoviesFromApi(0)
   }
+
   const handleSortedBySelect = useCallback(async (option: string) => {
     if(option !== 'Not Sorted'){
       setSortBy(option)
@@ -83,16 +85,17 @@ const Home = () => {
       setSortOrder(option)
     } else 
       setSortOrder('')
-
   },[])
+
   const handlePrevPage = () => {
     getMoviesFromApi(metaInfo.page - 1)
   }
+
   const handleNextPage = () => {
     getMoviesFromApi(metaInfo.page + 1)
   }
+
   const favouriteMoviesIds = favouriteMovies.map(m =>m.id)
-  console.log(`sortBy: ${sortBy}`)
   return(
     <div style={{backgroundColor: 'yellow',textAlign: 'center',padding:'5px'}}>
       <h1>MovieList:</h1>
@@ -111,7 +114,6 @@ const Home = () => {
           const isFavourite = favouriteMoviesIds.includes(movie.id) ? true : false
           return <Movie key={movie.id} isFav={isFavourite} refresh={refreshFavData} movie={movie} />
         })}
-
       </div> 
       {(metaInfo.page > 0)? <button onClick={handlePrevPage}>Prev</button> : ''} 
       {metaInfo.page < Math.ceil(metaInfo.total/metaInfo.size) - 1 ? <button onClick={handleNextPage}>Next</button> : '' }
